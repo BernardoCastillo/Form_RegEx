@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Submission with Multiple Validations</title>
+</head>
+<body>
+    <form id="regristrationForm">
+        <div>
+            <label for="nameInput">Name (2-30 characters):</label>
+            <input type="text" id="nameInput" required>
+        </div>
+
+        <div>
+            <label for="emailInput">Email:</label>
+            <input type="text" id="emailInput" required>
+        </div>
+
+        <div>
+            <label for="passwordInput">Password (8+ chars, must include number):</label>
+            <input type="text" id="passwordInput" required>
+        </div>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div id="formResult"></div>
+
+    <script>
+        document.getElementById("regristrationForm").addEventListener("submit", function(event){
+            // Prevent the form from submitting immediately
+            event.preventDefault();
+
+            // Get all input values
+            const name = document.getElementById('nameInput').value;
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+
+            // Create regex patterns for validation
+            const namePattern = /^[a-zA-Z\s]{2,30}$/; // 2-30 letters or spaces
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; //Basic email pattern
+            const passwordPattern = /^(?=.*\d).{8,}$/; // At least 8 chars and contains a digit
+
+            // Validate each field
+            const isNameValid = namePattern.test(name);
+            const isEmailValid = emailPattern.test(email);
+            const isPasswordValid = passwordPattern.test(password);
+
+            // Display results
+            const resultElement = document.getElementById('formResult');
+
+            // Check if all validations passed
+            if(isNameValid && isEmailValid && isPasswordValid){
+                resultElement.textContent = "Regristration successful!";
+                resultElement.style.color = "green";
+                // Here you would typically submit the form data
+                // this.submit();
+            }else{
+                // Build error message
+                let errorMessage = "Please fix the following errors:\n";
+
+                if(!isNameValid){
+                    errorMessage += "- Name must be 2-30 characters and contain only letters and spaces.\n";
+                }
+
+                if(!isEmailValid){
+                    errorMessage += "- Please enter a valid email address.\n";
+                }
+
+                if(!isPasswordValid){
+                    errorMessage += "- Password must be at least 8 characters and include at least one number.\n";
+                }
+
+                resultElement.textContent = errorMessage;
+                resultElement.style.color = "red";
+            }
+        });
+    </script>
+</body>
+</html>
